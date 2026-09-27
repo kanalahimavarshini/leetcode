@@ -1186,3 +1186,88 @@ class Solution {
         return true;        
     }
 }
+class Solution {
+    public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+        List<List<String>> ans = new ArrayList<>();
+
+        Set<String> dict = new HashSet<>(wordList);
+        if (!dict.contains(endWord)) return ans;
+
+        Map<String, List<String>> parents = new HashMap<>();
+        Map<String, Integer> level = new HashMap<>();
+
+        Queue<String> queue = new LinkedList<>();
+        queue.offer(beginWord);
+        level.put(beginWord, 0);
+
+        int wordLen = beginWord.length();
+        boolean found = false;
+
+        while (!queue.isEmpty() && !found) {
+            int size = queue.size();
+
+            for (int i = 0; i < size; i++) {
+                String word = queue.poll();
+                int currLevel = level.get(word);
+
+                char[] chars = word.toCharArray();
+
+                for (int pos = 0; pos < wordLen; pos++) {
+                    char original = chars[pos];
+
+                    for (char ch = 'a'; ch <= 'z'; ch++) {
+                        chars[pos] = ch;
+                        String nextWord = new String(chars);
+
+                        if (!dict.contains(nextWord))
+                            continue;
+
+                        if (!level.containsKey(nextWord)) {
+                            level.put(nextWord, currLevel + 1);
+                            queue.offer(nextWord);
+                            parents.put(nextWord, new ArrayList<>());
+                            parents.get(nextWord).add(word);
+                        } else if (level.get(nextWord) == currLevel + 1) {
+                            parents.get(nextWord).add(word);
+                        }
+
+                        if (nextWord.equals(endWord))
+                            found = true;
+                    }
+
+                    chars[pos] = original;
+                }
+            }
+        }
+
+        if (!found) return ans;
+
+        List<String> path = new ArrayList<>();
+        path.add(endWord);
+        dfs(endWord, beginWord, parents, path, ans);
+
+        return ans;
+    }
+
+    private void dfs(String word, String beginWord,
+                     Map<String, List<String>> parents,
+                     List<String> path,
+                     List<List<String>> ans) {
+
+        if (word.equals(beginWord)) {
+            List<String> temp = new ArrayList<>(path);
+            Collections.reverse(temp);
+            ans.add(temp);
+            return;
+        }
+
+        if (!parents.containsKey(word))
+            return;
+
+        for (String parent : parents.get(word)) {
+            path.add(parent);
+            dfs(parent, beginWord, parents, path, ans);
+            path.remove(path.size() - 1);
+        }
+    }
+}
