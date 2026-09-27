@@ -1143,3 +1143,30 @@ class Solution {
         return sell2;        
     }
 }
+class Solution {
+    int max = Integer.MIN_VALUE;
+
+    public int maxPathSum(TreeNode root) {
+        maxGain(root);
+        return max;
+    }
+
+    private int maxGain(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+
+        // Post-order traversal: handle negative gains by clamping to 0
+        int leftGain = Math.max(0, maxGain(root.left));
+        int rightGain = Math.max(0, maxGain(root.right));
+
+        // Complete path through current node (using BOTH subtrees)
+        int currMax = leftGain + root.val + rightGain;
+
+        // Update global maximum path sum
+        max = Math.max(max, currMax);
+
+        // Return best single-branch contribution to parent (using ONE subtree)
+        return root.val + Math.max(leftGain, rightGain);
+    }
+}
