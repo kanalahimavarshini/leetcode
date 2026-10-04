@@ -311,3 +311,8 @@ public int kthSmallest(TreeNode root, int k) {
       
       return -1; // never hit if k is valid
 }
+class Solution {
+    public boolean isPowerOfTwo(int n) {
+        return n > 0 && (n & (n - 1)) == 0;
+    }
+}
