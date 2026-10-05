@@ -705,3 +705,31 @@ public int kthSmallest(TreeNode root, int k) {
       
       return 1 + countNodes(n.left) + countNodes(n.right);
   }
+  class Solution {
+    public int hIndex(int[] citations) {
+
+        int n = citations.length;
+
+        int left = 0;
+        int right = n - 1;
+
+        while (left <= right) {
+
+            int mid = left + (right - left) / 2;
+
+            // Number of papers with at least citations[mid] citations
+            int papers = n - mid;
+
+            if (citations[mid] >= papers) {
+                // Valid h-index, try to find a larger one
+                // by moving toward the left.
+                right = mid - 1;
+            } else {
+                // Not enough citations, move right.
+                left = mid + 1;
+            }
+        }
+
+        return n - left;
+    }
+}
