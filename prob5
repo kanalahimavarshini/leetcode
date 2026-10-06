@@ -1075,3 +1075,24 @@ public void remove(String s, List<String> ans, int last_i, int last_j,  char[] p
     else // finished right to left
         ans.add(reversed);
 }
+class NumArray {
+
+    private int[] prefix;
+
+    public NumArray(int[] nums) {
+
+        int n = nums.length;
+
+        prefix = new int[n + 1];
+
+        // Build prefix sum array
+        for (int i = 0; i < n; i++) {
+            prefix[i + 1] = prefix[i] + nums[i];
+        }
+    }
+
+    public int sumRange(int left, int right) {
+
+        return prefix[right + 1] - prefix[left];
+    }
+}
