@@ -664,3 +664,37 @@ public int countRangeSum(int[] nums, int lower, int upper) {
                 ans++;
     return ans;
 }
+class Solution {
+    public ListNode oddEvenList(ListNode head) {
+
+        // 0 or 1 node
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        // Head of odd-positioned nodes
+        ListNode odd = head;
+
+        // Head of even-positioned nodes
+        ListNode even = head.next;
+
+        // Remember the start of even list
+        ListNode evenHead = even;
+
+        while (even != null && even.next != null) {
+
+            // Connect current odd node to next odd node
+            odd.next = even.next;
+            odd = odd.next;
+
+            // Connect current even node to next even node
+            even.next = odd.next;
+            even = even.next;
+        }
+
+        // Connect odd list with even list
+        odd.next = evenHead;
+
+        return head;
+    }
+}
