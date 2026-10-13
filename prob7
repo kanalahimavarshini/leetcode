@@ -763,3 +763,37 @@ class Solution {
         }
         return ans;
     }
+    class Solution {
+
+    int count = 0;
+
+    private void explore(TreeNode r, long sum, int target) {
+        if (r == null) return;
+
+        sum += r.val;
+
+        if (sum == target) {
+            count++;
+        }
+
+        explore(r.left, sum, target);
+        explore(r.right, sum, target);
+    }
+
+    private void findPath(TreeNode r, int target) {
+        if (r == null) return;
+
+        // Consider the current node as the starting point
+        explore(r, 0, target);
+
+        // Find paths starting from other nodes
+        findPath(r.left, target);
+        findPath(r.right, target);
+    }
+
+    public int pathSum(TreeNode root, int targetSum) {
+        count = 0;
+        findPath(root, targetSum);
+        return count;
+    }
+}
