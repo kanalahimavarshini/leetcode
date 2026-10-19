@@ -1089,3 +1089,13 @@ class Solution {
         return dp[i][j][move] = ans;
     }
 }
+class Solution {
+    public int findUnsortedSubarray(int[] nums) {
+        int n = nums.length, l = 0, r = -1, hi = Integer.MIN_VALUE, lo = Integer.MAX_VALUE;  // sorted array -> r - l + 1 == 0
+        for (int i = 0, j = n - 1; i < n; i++, j--) {
+            if (nums[i] < (hi = Math.max(hi, nums[i]))) r = i;  // something bigger is to the left -> misplaced
+            if (nums[j] > (lo = Math.min(lo, nums[j]))) l = j;  // something smaller is to the right -> misplaced
+        }
+        return r - l + 1;
+    }
+}
