@@ -1471,3 +1471,111 @@ class Solution {
         return (int) cur;
     }
 }
+class Solution {
+
+    public int[] helper(String equation, int st, int end) {
+        int X = 0;
+        int value = 0;
+
+        int val = 0;
+        char sign = '+';
+
+        boolean tackleDigit = false;
+
+        for(int i = st; i < end; i++) {
+            char ch = equation.charAt(i);
+
+            if(ch == 'x') {
+                if(tackleDigit) {
+                    if(sign == '+') {
+                        X += val;
+                    } else {
+                        X -= val;
+                    }
+
+                    val = 0;
+                    tackleDigit = false;
+                } else {
+                    if(sign == '+') {
+                        X += 1;
+                    } else {
+                        X -= 1;
+                    }
+                }
+
+                continue;
+            }
+
+            if(tackleDigit && !Character.isDigit(ch)) {
+
+                // System.out.println("val: " + val);
+
+                if(sign == '+') {
+                    value += val;
+                } else {
+                    value -= val;
+                }
+
+                val = 0;
+                tackleDigit = false;
+            }
+
+            if(ch == '+' || ch == '-') {
+                sign = ch;
+                continue;
+            }
+
+            // numeric value
+
+            tackleDigit = true;
+
+            val = (val * 10) + (ch - '0');
+
+            // System.out.println(val);
+            
+        }
+
+        if(val > 0) {
+            
+            if(sign == '+') {
+                value += val;
+            } else {
+                value -= val;
+            }
+        }
+
+        return new int[] {X, value};
+    }
+
+    public String solveEquation(String equation) {
+        int n = equation.length();
+        int index = equation.indexOf('=');
+
+        // left
+        int[] left = helper(equation, 0, index);
+
+        // right
+        int[] right = helper(equation, index + 1, n);
+
+        // System.out.println("left: " + left[0] + " " + left[1]);
+        // System.out.println("right: " + right[0] + " " + right[1]);
+
+        int x = left[0] - right[0];
+        int val = right[1] - left[1];
+
+        // System.out.println("X:" + x + " val: " + val);
+
+        if(x == 0 && val == 0) return "Infinite solutions";
+
+        if(x == 0 && val != 0) return "No solution";
+
+        if(x == 1) {
+            return "x=" + val;
+        }
+
+        val /= x;
+
+        return "x=" + val;
+        
+    }
+}
