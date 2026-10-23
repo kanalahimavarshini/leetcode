@@ -1667,3 +1667,55 @@ class Solution {
         }
 
         return count;
+        class Solution {
+    class Node {
+        Node[] children;
+        String eow;
+
+        Node() {
+            this.children = new Node[26];
+            this.eow = null;
+        }
+    }
+
+    public String replaceWords(List<String> dictionary, String sentence) {
+        Node root = new Node();
+
+        for (String word : dictionary) {
+            Node curr = root;
+            for (int i = 0; i < word.length(); i++) {
+                char ch = word.charAt(i);
+                if (curr.children[ch - 'a'] == null) {
+                    curr.children[ch - 'a'] = new Node();
+                }
+                if (curr.eow != null)
+                    break;
+                curr = curr.children[ch - 'a'];
+            }
+            if (curr.eow == null)
+                curr.eow = word;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        String[] words = sentence.split(" ");
+
+        for (String word : words) {
+            Node curr = root;
+            String toAppend = word;
+            for (int i = 0; i < word.length(); i++) {
+                char ch = word.charAt(i);
+                if (curr.children[ch - 'a'] == null) {
+                    break;
+                }
+                if (curr.children[ch - 'a'].eow != null) {
+                    toAppend = curr.children[ch - 'a'].eow;
+                    break;
+                }
+                curr = curr.children[ch - 'a'];
+            }
+            sb.append(toAppend).append(" ");
+        }
+
+        return sb.toString().trim();
+    }
+}
