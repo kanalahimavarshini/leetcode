@@ -1593,4 +1593,17 @@ class Solution
     
         return curr;//returning to the parent to that i am present, and here is my string with the informationn of my left and right child 
     }
-}//Please do Upvote, it helps a lot 
+}
+class Solution {
+     HashSet<Integer>set= new HashSet<>();
+    public boolean findTarget(TreeNode root, int k) {
+       
+        if(root==null){
+            return false;
+        }
+        if(set.contains(k-root.val))
+        return true;
+        set.add(root.val);
+        return findTarget(root.left,k)|| findTarget(root.right,k);
+    }
+}
