@@ -1665,3 +1665,70 @@ class MyCircularDeque {
         return size == capacity;
     }
 }
+class Solution {
+    class Disjoint
+    {
+        int parent[];
+        int rank[];
+        Disjoint(int n)
+        {
+            parent = new int[n];
+            rank = new int[n];
+            for(int i=0;i<n;i++)parent[i]=i;
+        }
+        int findUltimateParent(int node)
+        {
+            if(parent[node] == node) return node;
+            return parent[node] = findUltimateParent(parent[node]);
+        }
+        void unionByRank(int u,int v)
+        {
+            int pu = findUltimateParent(u);
+            int pv = findUltimateParent(v);
+            if(pv == pu)return;
+            if(rank[pv] < rank[pu]) parent[pv]=pu;
+            else if(rank[pu] < rank[pv]) parent[pu]=pv;
+            else
+            {
+                parent[pu] = pv;
+                rank[pv]++;
+            }
+        }
+    }
+    public List<List<String>> accountsMerge(List<List<String>> accounts) {
+        int n = accounts.size();
+        Disjoint ds = new Disjoint(n);
+        Map<String,Integer> map = new HashMap<>();
+
+        for(int i=0;i<n;i++)
+        {
+            for(int j=1;j<accounts.get(i).size();j++)
+            {
+                String mail = accounts.get(i).get(j);
+                if(map.containsKey(mail)) ds.unionByRank(i,map.get(mail));
+                else map.put(mail,i);
+            }
+        }
+
+        List<String>[] mergedMail = new ArrayList[n];
+        for(int i=0;i<n;i++)mergedMail[i]=new ArrayList<>();
+
+        for(Map.Entry<String,Integer> entry : map.entrySet())
+        {
+             int node = ds.findUltimateParent(entry.getValue());
+             mergedMail[node].add(entry.getKey());
+        }
+
+        List<List<String>> res = new ArrayList<>();
+        for(int i=0;i<n;i++)
+        {
+            if(mergedMail[i].isEmpty())continue;
+            Collections.sort(mergedMail[i]);
+            List<String> list = new ArrayList<>();
+            list.add(accounts.get(i).get(0));
+            list.addAll(mergedMail[i]);
+            res.add(list);
+        }
+        return res; 
+    }
+}
