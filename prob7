@@ -2005,3 +2005,54 @@ class MyCalendarTwo {
       return new Event(Math.max(e.start, start), Math.min(e.end, end));  
     }
 }
+class Node{
+    int left,right,result,lazy;
+    Node leftNode,rightNode;
+    Node(int result,int left,int right){
+        this.result = result;
+        this.right = right;
+        this.left = left;
+    }
+    Node(){}
+}
+class MyCalendarThree {
+    Node root;
+    public MyCalendarThree() {
+        root = new Node(0,0,(int)1e9 - 1);
+    }
+    
+    public int book(int st, int end) {
+        updateTree(root,st,end - 1);
+        return root.result;
+    }
+    private void updateTree(Node node,int left,int right){
+        int l = node.left,h = node.right;
+        int mid = (h - l) / 2 + l;
+        if(l > right || h < left) return;
+        if(l >= left && h <= right){
+            node.result++;
+            node.lazy++;
+            return;
+        }
+        push(node);
+        updateTree(node.leftNode,left,right);
+        updateTree(node.rightNode,left,right);
+        node.result = Math.max(node.leftNode.result,node.rightNode.result); 
+    }
+    private void push(Node node){
+        int l = node.left,h = node.right;
+        int mid = (h - l) / 2 + l;
+        if(node.leftNode == null){
+            node.leftNode = new Node(0,l,mid);
+        }
+        if(node.rightNode == null){
+            node.rightNode = new Node(0,mid + 1,h);
+        }
+        if(node.lazy == 0)return;
+        node.leftNode.result += node.lazy;
+        node.rightNode.result += node.lazy;
+        node.leftNode.lazy += node.lazy;
+        node.rightNode.lazy += node.lazy;
+        node.lazy = 0;
+    }
+}
