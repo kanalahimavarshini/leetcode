@@ -1732,3 +1732,51 @@ class Solution {
         return res; 
     }
 }
+class Solution {
+    public List<String> removeComments(String[] source) {
+        boolean blockActive = false; 
+
+
+        List<String> result = new ArrayList<String>();
+        StringBuilder builder = new StringBuilder();
+    
+        
+        for(String line: source){
+            if(!blockActive){ 
+                builder = new StringBuilder();
+            }
+            for(int i=0; i<line.length(); i++){ //Read every character of line
+                char c = line.charAt(i);
+                if(!blockActive){ //If we aren't currently in a block
+                    
+                    if(c=='/'){ 
+                        
+                        if(i<line.length()-1 && line.charAt(i+1)=='/'){ //Checking if it's a regular comment
+                            break; 
+                        } else if(i<line.length()-1 && line.charAt(i+1)=='*'){ //Or a block comment
+                            i++; 
+                            blockActive = true;
+                        } else{ 
+                            builder.append(c);
+                        }
+                    } else  { //Append all other characters directly to the builder. 
+                        builder.append(c);
+                    }
+                } else {
+                    if(c=='*'){
+                        if(i<line.length()-1 && line.charAt(i+1)=='/'){
+                              blockActive = false;  
+                              i++;
+                        }
+                    }
+                } 
+            }
+            if(!blockActive && builder.length()!=0){
+                result.add(builder.toString());
+            }
+            
+        } 
+        return result;
+        
+    }
+}
