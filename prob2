@@ -2161,3 +2161,52 @@ class MyCalendar {
         return res;
     }
 }
+class Solution {
+    public int countPalindromicSubsequences(String s) {
+        int n = s.length();
+        int[][] prefix = new int[n][4];//1-based
+        Arrays.fill(prefix[0],-1);
+        prefix[0][s.charAt(0)-'a'] = 0;
+        for(int i=1;i<n;i++){
+            int ch = s.charAt(i)-'a';
+            for(int j=0;j<4;j++){
+                if(j==ch){
+                    prefix[i][j] = i;
+                }else{
+                    prefix[i][j] = prefix[i-1][j];
+                }
+            }
+        }
+        int[][] suffix = new int[n+1][4];//0-based
+        Arrays.fill(suffix[n],n);
+        for(int i=n-1;i>=0;i--){
+            int ch = s.charAt(i)-'a';
+            for(int j=0;j<4;j++){
+                if(j==ch){
+                    suffix[i][j] = i;
+                }else{
+                    suffix[i][j] = suffix[i+1][j];
+                }
+            }
+        }
+        Long[][] dp =new Long[n][n];
+        return (int)memo(0,n-1,s,prefix,suffix,dp,n);
+    }
+    long mod = (long)1e9+7;
+    public long memo(int i,int j,String s,int[][] pref,int[][] suff,Long[][] dp,int n){
+        if(i>j) return 0;
+        if(dp[i][j]!=null) return dp[i][j];
+        long cnt = 0;
+        for(int ch = 0;ch<4;ch++){
+            int next = suff[i][ch];
+            int prev = pref[j][ch];
+            if(next<=j){
+                cnt++;
+            }
+            if(next!=n && prev!=-1 && next<prev){
+                cnt = (cnt+1+memo(next+1,prev-1,s,pref,suff,dp,n))%mod;
+            }
+        }
+        return dp[i][j] = cnt;
+    }
+}
