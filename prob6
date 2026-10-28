@@ -1867,3 +1867,37 @@ class Solution {
         return results;
     }
 }
+// top down DP solution
+  public int deleteAndEarn(int[] nums) {
+    Arrays.sort(nums);
+    return deleteAndEarn(nums, 0, new int[nums.length]);
+  }
+
+  private int deleteAndEarn(int[] nums, int idx, int[] memo) {
+    // if we reached the end of the array, we can not earn anymore, return 0
+    if(idx == nums.length)
+      return 0;
+
+    if(memo[idx] == 0) {
+      // delete and earn this element
+      int earned = nums[idx];
+      int skip = idx + 1;
+      
+      // simply add all similar values of nums[idx] to earned at once
+      while(skip < nums.length && nums[skip] == nums[idx]) {
+        earned += nums[idx];
+        skip++;
+      }
+      while(skip < nums.length && nums[skip] == nums[idx] + 1)
+        skip++;
+      
+      // recurse
+      earned += deleteAndEarn(nums, skip, memo);
+
+      // skip deleting and earning this element
+      int skipped = deleteAndEarn(nums, id
+      memo[idx] = Math.max(earned, skipped);
+    }
+
+    return memo[idx];
+  }
