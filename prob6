@@ -1901,3 +1901,116 @@ class Solution {
 
     return memo[idx];
   }
+  package Graphs.Medium;
+
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Queue;
+
+// Solution Class
+class Solution {
+  // Method to find the minimum total number of turns required to open the lock
+  public int openLock(String[] deadends, String target) {
+    // Pre-populate deadendSet with all deadend combinations as integers
+    HashSet<Integer> deadendSet = new HashSet<>();
+
+    for (int i = 0; i < deadends.length; i++) {
+      deadendSet.add(this.stringToInteger(deadends[i]));
+    }
+
+    int targetLock = this.stringToInteger(target);
+
+    // If the start state is a deadend, the lock cannot be moved at all
+    if (deadendSet.contains(0)) {
+      return -1;
+    }
+
+    int turn = 0;
+
+    Queue<char[]> queue = new ArrayDeque<>();
+    queue.offer(new char[] { '0', '0', '0', '0' });
+
+    // Mark start state as visited by adding it to deadendSet
+    deadendSet.add(0);
+
+    while (!queue.isEmpty()) {
+      int size = queue.size();
+
+      // Process all states at the current turn level
+      for (int i = 0; i < size; i++) {
+        char[] temp = queue.poll();
+        int value = this.characterToInteger(temp);
+
+        if (value == targetLock) {
+          return turn;
+        }
+
+        // Generate and enqueue all 8 unvisited non-deadend neighbors
+        ArrayList<char[]> combination = this.nextCombination(temp);
+
+        for (int j = 0; j < combination.size(); j++) {
+          char[] t = combination.get(j);
+          int nextValue = this.characterToInteger(t);
+
+          if (!deadendSet.contains(nextValue)) {
+            queue.offer(t);
+            deadendSet.add(nextValue);
+          }
+        }
+      }
+
+      turn++;
+    }
+
+    return -1;
+  }
+
+  // Convert a 4-character digit string to its integer value
+  private int stringToInteger(String deadend) {
+    return ((deadend.charAt(0) - '0') * 1000)
+        + ((deadend.charAt(1) - '0') * 100)
+        + ((deadend.charAt(2) - '0') * 10)
+        + (deadend.charAt(3) - '0');
+  }
+
+  // Convert a 4-element char array to its integer value
+  private int characterToInteger(char[] number) {
+    return ((number[0] - '0') * 1000)
+        + ((number[1] - '0') * 100)
+        + ((number[2] - '0') * 10)
+        + (number[3] - '0');
+  }
+
+  // Generate all 8 neighbors: each of the 4 wheels turned up or down by 1
+  private ArrayList<char[]> nextCombination(char[] value) {
+    ArrayList<char[]> combination = new ArrayList<>();
+
+    for (int i = 0; i < 4; i++) {
+      // Turn wheel i up (+1 mod 10)
+      char[] temp = new char[] { value[0], value[1], value[2], value[3] };
+      temp[i] = (char) ((((temp[i] - '0') + 1) % 10) + '0');
+      combination.add(temp);
+
+      // Turn wheel i down (-1 mod 10, using +10 to avoid negative modulo)
+      temp = new char[] { value[0], value[1], value[2], value[3] };
+      temp[i] = (char) (((((temp[i] - '0') + 10) - 1) % 10) + '0');
+      combination.add(temp);
+    }
+
+    return combination;
+  }
+}
+
+// Main Class
+public class _752_Open_the_Lock {
+  // Main method to test openLock
+  public static void main(String[] args) {
+    String[] deadends = new String[] { "0201", "0101", "0102", "1212", "2002" };
+    String target = "0202";
+
+    int result = new Solution().openLock(deadends, target);
+
+    System.out.println("The minimum total number of turns required to open the lock is : " + result);
+  }
+}
