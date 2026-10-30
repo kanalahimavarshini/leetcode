@@ -1838,3 +1838,31 @@ class Solution {
         return res.toString();        
     }
 }
+class Solution {
+public:
+    int maxChunksToSorted(vector<int>& arr) {
+
+        vector<int> sorted = arr;
+        sort(sorted.begin(), sorted.end());
+
+        unordered_map<int,int> diff;
+        int chunks = 0;
+
+        for(int i=0;i<arr.size();i++)
+        {
+            // Add current element from original array.
+            if(++diff[arr[i]] == 0)
+                diff.erase(arr[i]);
+
+            // Remove current element from sorted array.
+            if(--diff[sorted[i]] == 0)
+                diff.erase(sorted[i]);
+
+            // Same multiset => current chunk can end.
+            if(diff.empty())
+                chunks++;
+        }
+
+        return chunks;
+    }
+};
