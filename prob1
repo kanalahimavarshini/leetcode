@@ -2204,3 +2204,16 @@ public boolean splitArraySameAverage(int[] nums) {
         map.put(key, case2);
         return case2;
     }
+    class Solution {
+    public int[] numberOfLines(int[] widths, String s) {
+        int line  = 1, px = 0;
+        for(char ch : s.toCharArray()){
+            int val = widths[ch - 'a'];
+            line = px + val > 100? line + 1: line;
+            px = px + val > 100 ? val : px+val;
+        }
+
+        return new int[]{line,px};
+    
+    }
+}
