@@ -2161,3 +2161,46 @@ class Solution {
         return set.size();
     }
 }
+public boolean splitArraySameAverage(int[] nums) {
+        int sum = 0;
+        for(int val : nums)
+            sum += val;
+        
+       map = new HashMap<>();
+        
+        for(int count = 1; count <= nums.length - 1; count++){
+            if((sum * count) % nums.length == 0){
+                if(isPossible(nums, 0, count, (sum * count) / nums.length)){
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    private Map<String, Boolean> map;
+    
+    private boolean isPossible(int[] nums, int i, int count, int sum){
+        if(sum == 0 && count == 0)
+            return true;
+        
+        if(i == nums.length || count == 0)
+            return false;
+        
+        String key = i + "*" + count + "*" + sum;
+        
+        if(map.containsKey(key))
+            return map.get(key);
+        
+        if(sum - nums[i] >= 0){         
+            boolean case1 = isPossible(nums, i + 1, count - 1, sum - nums[i]);
+            boolean case2 = isPossible(nums, i + 1, count, sum);
+            map.put(key, case1 || case2);
+            return case1 || case2;
+        }
+        
+        boolean case2 = isPossible(nums, i + 1, count, sum);
+        map.put(key, case2);
+        return case2;
+    }
