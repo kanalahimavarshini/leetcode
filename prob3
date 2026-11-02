@@ -1910,3 +1910,59 @@ class Solution {
         return maxArea;
     }
 }
+class Solution {
+    public List<String> ambiguousCoordinates(String s) {
+        List<String> result = new ArrayList<>();
+
+        String str = s.substring(1, s.length() - 1);
+
+        for (int i = 1; i < str.length(); i++) {
+            String left = str.substring(0, i);
+            String right = str.substring(i);
+
+            List<String> leftNums = generate(left);
+            List<String> rightNums = generate(right);
+
+            for (String l : leftNums) {
+                for (String r : rightNums) {
+                    result.add("(" + l + ", " + r + ")");
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private List<String> generate(String s) {
+        List<String> res = new ArrayList<>();
+        int n = s.length();
+
+        if (isValidInteger(s)) {
+            res.add(s);
+        }
+
+        for (int i = 1; i < n; i++) {
+            String left = s.substring(0, i);
+            String right = s.substring(i);
+
+            if (isValidDecimal(left, right)) {
+                res.add(left + "." + right);
+            }
+        }
+
+        return res;
+    }
+
+    private boolean isValidInteger(String s) {
+        return s.equals("0") || s.charAt(0) != '0';
+    }
+
+    private boolean isValidDecimal(String left, String right) {
+       
+        if (!(left.equals("0") || left.charAt(0) != '0')) {
+            return false;
+        }
+
+        return right.charAt(right.length() - 1) != '0';
+    }
+}
