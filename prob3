@@ -1846,3 +1846,12 @@ class Solution {
         else return false;
     }
 }
+class Solution {
+    public boolean xorGame(int[] nums) {
+        int n=nums.length;
+        if(n%2==0) return true;
+        int xor=0;
+        for(int num : nums) xor ^= num;
+        return xor==0;
+    }
+}
