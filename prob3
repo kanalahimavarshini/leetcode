@@ -2330,3 +2330,18 @@ public class Solution {
             res = (res + (N - index[c][1]) * (index[c][1] - index[c][0]) % mod) % mod;
         return res;
     }
+    class Solution {
+    public int consecutiveNumbersSum(int n) {
+        int count = 0;
+
+        for (long k = 1; k * (k + 1) / 2 <= n; k++) {
+            long remaining = n - k * (k - 1) / 2;
+
+            if (remaining % k == 0) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+}
