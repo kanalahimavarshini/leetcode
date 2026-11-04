@@ -2548,3 +2548,60 @@ class Solution {
         return Math.max(Math.max(pre_zeros, suf_zeros), (max_zeros + 1) / 2);
     }
 }
+import java.util.*;
+
+class Solution {
+    private static final int MOD = 1_000_000_007;
+
+    public int rectangleArea(int[][] rectangles) {
+        List<int[]> events = new ArrayList<>();
+        Set<Integer> ySet = new HashSet<>();
+
+        for (int[] r : rectangles) {
+            events.add(new int[]{r[0], 1, r[1], r[3]});  
+            events.add(new int[]{r[2], -1, r[1], r[3]});  
+            ySet.add(r[1]);
+            ySet.add(r[3]);
+        }
+
+        Collections.sort(events, (a, b) -> Integer.compare(a[0], b[0]));
+
+        List<Integer> ys = new ArrayList<>(ySet);
+        Collections.sort(ys);
+
+        Map<Integer, Integer> yIndex = new HashMap<>();
+        for (int i = 0; i < ys.size(); i++) {
+            yIndex.put(ys.get(i), i);
+        }
+
+        int[] count = new int[ys.size()];
+        long area = 0;
+
+        int prevX = events.get(0)[0];
+        long coveredY = 0;
+
+        for (int[] event : events) {
+            int x = event[0];
+
+            area = (area + (long) (x - prevX) * coveredY) % MOD;
+
+            int y1 = yIndex.get(event[2]);
+            int y2 = yIndex.get(event[3]);
+
+            for (int i = y1; i < y2; i++) {
+                count[i] += event[1];
+            }
+
+            coveredY = 0;
+            for (int i = 0; i < ys.size() - 1; i++) {
+                if (count[i] > 0) {
+                    coveredY += (long) ys.get(i + 1) - ys.get(i);
+                }
+            }
+
+            prevX = x;
+        }
+
+        return (int) area;
+    }
+}
