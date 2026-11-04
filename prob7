@@ -2513,3 +2513,19 @@ class Solution {
         return -1;
     }
 }
+class Solution {
+    public String shiftingLetters(String s, int[] shifts) {
+        char[] arr = s.toCharArray();
+
+        long suffix = 0;
+
+        for (int i = shifts.length - 1; i >= 0; i--) {
+            suffix = (suffix + shifts[i]) % 26;
+
+            int newPos = (arr[i] - 'a' + (int) suffix) % 26;
+            arr[i] = (char) ('a' + newPos);
+        }
+
+        return new String(arr);
+    }
+}
