@@ -2497,3 +2497,78 @@ class Solution {
         }
     }
 }
+class Solution {
+    final int[][] DIRS = {{-1, 0},{1, 0},{0, -1},{0, 1}};
+    int m, n;
+    public int shortestPathAllKeys(String[] grid) {
+        m = grid.length;
+        n = grid[0].length();
+
+        int startRow = 0;
+        int startCol = 0;
+        int allKeysMask = 0;
+
+        for(int row=0; row<m; row++) {
+            for(int col=0; col<n; col++) {
+                char ch = grid[row].charAt(col);
+                if(ch == '@') {
+                    startRow = row;
+                    startCol = col;
+                } 
+                else if(ch >= 'a' && ch <= 'f') {
+                    allKeysMask |= (1 << (ch - 'a'));
+                }
+            }
+        }
+
+        if(allKeysMask == 0) return 0;
+
+        boolean[][][] vis = new boolean[m][n][1 << 6]; // per ques, at most 6 keys: a, b, c, d, e, f
+        Queue<int[]> q = new LinkedList<>(); 
+
+        q.offer(new int[]{ startRow, startCol, 0 });    // state: {row, col, keyMask}
+        vis[startRow][startCol][0] = true;
+
+        int steps = 0;
+        while(!q.isEmpty()) {
+            int size = q.size();
+            while(size-- > 0) {
+                int[] curr = q.poll();
+                int row = curr[0];
+                int col = curr[1];
+                int currentKeyMask = curr[2];
+
+                if(currentKeyMask == allKeysMask) return steps;
+
+                for(int[] dir: DIRS) {
+                    int newRow = row + dir[0];
+                    int newCol = col + dir[1];
+                    if(!isValidCell(newRow, newCol)) continue;
+        
+                    char ch = grid[newRow].charAt(newCol);
+                    if(ch == '#') continue;
+                    if(ch >= 'A' && ch <= 'F' && (currentKeyMask & (1 << (ch - 'A'))) == 0) {
+                        continue;  // cannot enter a lock without its corresponding key.
+                    }
+
+                    int nextKeyMask = currentKeyMask;
+                    if(ch >= 'a' && ch <= 'f') {
+                        nextKeyMask |= (1 << (ch - 'a')); // collect key when entering its cell.
+                    }
+
+                    if(!vis[newRow][newCol][nextKeyMask]){
+                        vis[newRow][newCol][nextKeyMask] = true;
+                        q.offer(new int[]{ newRow, newCol, nextKeyMask });
+                    }
+                   
+                }
+            }
+            steps++;
+        }
+
+        return -1;
+    }
+    private boolean isValidCell(int row, int col){
+        return row >=0 && row < m && col >= 0 && col < n;
+    }
+}
