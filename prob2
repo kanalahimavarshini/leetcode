@@ -2617,3 +2617,31 @@ class Solution {
         return deepest.iterator().next();
     }
 }
+class Solution {
+    public int primePalindrome(int n) {
+        if (8 <= n && n <= 11) return 11;
+
+        for (int x = 1; ; x++) {
+            String s = Integer.toString(x);
+            StringBuilder sb = new StringBuilder(s);
+            sb.deleteCharAt(sb.length() - 1);
+            sb.reverse();
+            int num = Integer.parseInt(s + sb.toString());
+
+            if (num >= n && isPrime(num)) {
+                return num;
+            }
+        }
+    }
+
+    private boolean isPrime(int x) {
+        if (x < 2) return false;
+        if (x % 2 == 0) return x == 2;
+
+        for (int i = 3; i * i <= x; i += 2) {
+            if (x % i == 0) return false;
+        }
+
+        return true;
+    }
+}
