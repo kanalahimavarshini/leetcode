@@ -2406,3 +2406,42 @@ class Solution {
         return dp[0];
     }
 }
+class Solution {
+    private static final int MOD = 1_000_000_007;
+
+    public int numPermsDISequence(String s) {
+        int n = s.length();
+
+        long[] dp = new long[n + 1];
+        Arrays.fill(dp, 1);
+
+        for (int i = 1; i <= n; i++) {
+
+            long[] ndp = new long[n + 1];
+            long[] pref = new long[n + 2];
+
+            int m = n - i + 1; 
+
+            for (int j = 0; j <= m; j++) {
+                pref[j + 1] = (pref[j] + dp[j]) % MOD;
+            }
+
+            if (s.charAt(i - 1) == 'I') {
+
+                for (int j = 0; j < m; j++) {
+                    ndp[j] = pref[j + 1];
+                }
+
+            } else {
+
+                for (int j = 0; j < m; j++) {
+                    ndp[j] = (pref[m + 1] - pref[j + 1] + MOD) % MOD;
+                }
+            }
+
+            dp = ndp;
+        }
+
+        return (int)(dp[0] % MOD);
+    }
+}
