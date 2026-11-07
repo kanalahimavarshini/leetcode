@@ -2492,3 +2492,63 @@ public class Solution {
         return nums;
     }
 }
+class Solution {
+    public int superpalindromesInRange(String left, String right) {
+        long L = Long.parseLong(left);
+        long R = Long.parseLong(right);
+
+        int count = 0;
+
+        for (long k = 1; ; k++) {
+            long p = createPalindrome(k, true);
+            long square = p * p;
+
+            if (square > R) break;
+
+            if (square >= L && isPalindrome(square)) {
+                count++;
+            }
+        }
+
+        for (long k = 1; ; k++) {
+            long p = createPalindrome(k, false);
+            long square = p * p;
+
+            if (square > R) break;
+
+            if (square >= L && isPalindrome(square)) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    private long createPalindrome(long num, boolean odd) {
+        long pal = num;
+
+        if (odd) {
+            num /= 10;
+        }
+
+        while (num > 0) {
+            pal = pal * 10 + (num % 10);
+            num /= 10;
+        }
+
+        return pal;
+    }
+
+    private boolean isPalindrome(long x) {
+        String s = Long.toString(x);
+        int l = 0, r = s.length() - 1;
+
+        while (l < r) {
+            if (s.charAt(l++) != s.charAt(r--)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
