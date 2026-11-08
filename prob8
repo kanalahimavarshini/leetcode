@@ -2688,3 +2688,24 @@ class Solution {
         return isInc || isDec;        
     }
 }
+class Solution {
+    TreeNode ans = new TreeNode(0);
+
+    public TreeNode increasingBST(TreeNode root) {
+        TreeNode head = ans;
+        incOrder(root);
+
+        return head.right;
+    }
+    private void incOrder(TreeNode root) {
+        if (root == null) return;
+
+        incOrder(root.left);
+
+        ans.right = root;
+        root.left = null;
+        ans = ans.right;
+
+        incOrder(root.right);
+    }
+}
