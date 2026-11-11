@@ -3375,3 +3375,24 @@ class Solution {
         return result;
     }
 }
+class Solution {
+    public int subarraysDivByK(int[] nums, int k) {
+        Map<Integer, Integer> freq = new HashMap<>();
+        freq.put(0, 1);
+
+        int prefixSum = 0;
+        int count = 0;
+
+        for (int num : nums) {
+            prefixSum += num;
+
+            int rem = ((prefixSum % k) + k) % k;
+
+            count += freq.getOrDefault(rem, 0);
+
+            freq.put(rem, freq.getOrDefault(rem, 0) + 1);
+        }
+
+        return count;
+    }
+}
