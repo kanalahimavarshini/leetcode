@@ -3266,3 +3266,38 @@ class Solution {
         }
     }
 }
+import java.util.*;
+
+class Solution {
+    public List<Integer> powerfulIntegers(int x, int y, int bound) {
+        Set<Integer> set = new HashSet<>();
+
+        List<Integer> xPowers = new ArrayList<>();
+        List<Integer> yPowers = new ArrayList<>();
+
+        long value = 1;
+        while (value <= bound) {
+            xPowers.add((int) value);
+            if (x == 1) break;
+            value *= x;
+        }
+
+        value = 1;
+        while (value <= bound) {
+            yPowers.add((int) value);
+            if (y == 1) break;
+            value *= y;
+        }
+
+        for (int a : xPowers) {
+            for (int b : yPowers) {
+                int sum = a + b;
+                if (sum <= bound) {
+                    set.add(sum);
+                }
+            }
+        }
+
+        return new ArrayList<>(set);
+    }
+}
