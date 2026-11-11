@@ -3396,3 +3396,53 @@ class Solution {
         return count;
     }
 }
+import java.util.*;
+
+class Solution {
+    public int oddEvenJumps(int[] arr) {
+        int n = arr.length;
+
+        int[] nextHigher = new int[n];
+        int[] nextLower = new int[n];
+        Arrays.fill(nextHigher, -1);
+        Arrays.fill(nextLower, -1);
+
+        TreeMap<Integer, Integer> map = new TreeMap<>();
+
+        for (int i = n - 1; i >= 0; i--) {
+            Integer ceil = map.ceilingKey(arr[i]);
+            if (ceil != null) {
+                nextHigher[i] = map.get(ceil);
+            }
+
+            Integer floor = map.floorKey(arr[i]);
+            if (floor != null) {
+                nextLower[i] = map.get(floor);
+            }
+
+            map.put(arr[i], i);
+        }
+
+        boolean[] odd = new boolean[n];
+        boolean[] even = new boolean[n];
+
+        odd[n - 1] = true;
+        even[n - 1] = true;
+
+        int ans = 1;
+
+        for (int i = n - 2; i >= 0; i--) {
+            if (nextHigher[i] != -1) {
+                odd[i] = even[nextHigher[i]];
+            }
+
+            if (nextLower[i] != -1) {
+                even[i] = odd[nextLower[i]];
+            }
+
+            if (odd[i]) ans++;
+        }
+
+        return ans;
+    }
+}
