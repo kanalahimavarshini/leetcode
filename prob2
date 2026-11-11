@@ -3132,3 +3132,17 @@ class Solution {
         return ops;
     }
 }
+class Solution {
+    public boolean isUnivalTree(TreeNode root) {
+           return dfs(root);
+    }
+    private boolean dfs(TreeNode root){
+        if(root == null) return true;
+        boolean leftValid = dfs(root.left);
+        boolean rightValid = dfs(root.right);
+        if(!leftValid || !rightValid) return false;
+        if(root.left != null && root.val != root.left.val) return false;
+        if(root.right != null && root.val != root.right.val) return false;
+        return true;
+    }
+}
