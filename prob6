@@ -2753,3 +2753,19 @@ class Solution {
         return sum;
     }
 }
+class Solution {
+    public int clumsy(int n) {
+        return solve(n, 0, 1);
+    }
+
+    public int solve(int n, int oprtr, int sign){
+        if(n == 1) return sign * 1;
+        if(oprtr == 0){
+            if(n <= 3) return sign * n * (n - 1);
+            else return sign * n * (n - 1) / (n - 2) + solve(n - 3, 1, 1);
+        }
+        else{
+            return n + solve(n - 1, 0, -1);
+        }
+    }
+}
