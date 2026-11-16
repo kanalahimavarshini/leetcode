@@ -3039,3 +3039,13 @@ class Solution {
         return x == 0 && y == 0 || i != 0;
     }
 }
+class Garden {
+    public static final int[] FLOWER_TYPES = {1,2,3,4};
+    int flowerType;
+    List<Garden> connectedGardens;
+    
+    public Garden() {
+        flowerType = -1;
+        connectedGardens = new ArrayList<Garden>();
+    }
+}
