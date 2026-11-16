@@ -2750,3 +2750,54 @@ class Solution {
         return maxAns;
     }
 }
+class StreamChecker {
+    class TrieNode {
+        TrieNode[] children = new TrieNode[26];
+        boolean isEnd = false;
+    }
+
+    private TrieNode root;
+    private StringBuilder stream;  // every letter received so far
+
+    public StreamChecker(String[] words) {
+        root = new TrieNode();
+        stream = new StringBuilder();
+        for (String word : words) {
+            TrieNode curr = root;
+            // insert the word in REVERSE order
+            for (int i = word.length() - 1; i >= 0; i--) {
+                int idx = word.charAt(i) - 'a';
+                if (curr.children[idx] == null) {
+                    curr.children[idx] = new TrieNode();
+                }
+                curr = curr.children[idx];
+            }
+            curr.isEnd = true;
+        }
+    }
+
+    // Walk the stream backward, following the reversed-word trie
+    private boolean search() {
+        TrieNode curr = root;
+        for (int i = stream.length() - 1; i >= 0; i--) {
+            int idx = stream.charAt(i) - 'a';
+            if (curr.children[idx] == null) {
+                return false;       // no word continues this way
+            }
+            curr = curr.children[idx];
+            if (curr.isEnd) {
+                return true;        // a word ends at the newest letter
+            }
+        }
+        return false;
+    }
+
+    public boolean query(char letter) {
+        stream.append(letter);
+        // quick reject: no word ends with this letter
+        if (root.children[letter - 'a'] != null) {
+            return search();
+        }
+        return false;
+    }
+}
