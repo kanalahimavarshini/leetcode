@@ -2371,3 +2371,15 @@ class Solution {
         S = S.replaceAll("[^0-9]", "");
         return country[S.length() - 10] + "***-***-" + S.substring(S.length() - 4);
     }
+    class Solution {
+    public int heightChecker(int[] heights) {
+        int[] expected = heights.clone();
+        Arrays.sort(expected);
+        int count = 0;
+        for (int i = 0; i < heights.length; i++) {
+            if (heights[i] != expected[i])
+                count++;
+        }
+        return count;
+    }
+}
