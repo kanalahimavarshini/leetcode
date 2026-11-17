@@ -2675,4 +2675,22 @@ class Solution {
         arr[j] = temp;
     }
 }
+class Solution {
+    public TreeNode sufficientSubset(TreeNode root, int limit) {
+        return helper(root, limit, 0);
+    }
+
+    TreeNode helper(TreeNode root, int limit, int sum){
+        if(root == null) return null;
+
+        if(root.left == null && root.right == null){
+            return root.val + sum < limit ? null : root;
+        }
+
+        root.left = helper(root.left, limit, sum + root.val);
+        root.right = helper(root.right, limit, sum + root.val);
+
+        return (root.left == null && root.right == null) ? null : root;
+    }
+}
 
