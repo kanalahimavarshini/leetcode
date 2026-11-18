@@ -3480,3 +3480,8 @@ public class Solution {
         return st.peek() == 't';
     }
 }
+class Solution {
+    public String defangIPaddr(String address) {
+        return address.replace(".","[.]");
+    }
+}
