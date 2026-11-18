@@ -3396,3 +3396,24 @@ class Solution {
         return res;
     }
 }
+import java.util.*;
+
+class Solution {
+    private final List<Integer> path = new ArrayList<>();
+
+    public List<Integer> pathInZigZagTree(int label) {
+        build(label);
+        return path;
+    }
+
+    private void build(int x) {
+        if (x == 0) return;
+        int z = 31 - Integer.numberOfLeadingZeros(x);
+        if (z == 0) {
+            build(0);
+        } else {
+            build((1 << (z - 1)) + (1 << z) - 1 - x / 2);
+        }
+        path.add(x);
+    }
+}
