@@ -2902,3 +2902,28 @@ class Solution {
     return ans;
   }
 }
+    class Solution {
+    int findMax(int l, int h, int[] arr) {
+        int maxi = 0;
+        for (int i = l; i <= h; i++)
+            maxi = Math.max(maxi, arr[i]);
+        return maxi;
+    }
+
+    int fun(int l, int h, int[] arr) {
+        if (l == h) return 0;
+        if (l == h - 1) return arr[l] * arr[h];
+        int ans = Integer.MAX_VALUE;
+        for (int i = l; i < h; i++) {
+            int max1 = findMax(l, i, arr);
+            int max2 = findMax(i + 1, h, arr);
+            int temp = fun(l, i, arr) + fun(i + 1, h, arr);
+            ans = Math.min(ans, (max1 * max2) + temp);
+        }
+        return ans;
+    }
+
+    public int mctFromLeafValues(int[] arr) {
+        return fun(0, arr.length - 1, arr);
+    }
+}
