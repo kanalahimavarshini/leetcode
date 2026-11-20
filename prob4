@@ -3242,3 +3242,39 @@ class SnapshotArray {
         return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
     }
 }
+class Solution {
+    static final int MOD = 1000000007;
+
+    public int numRollsToTargetRecMemo(
+        int n, int k, int target, int[][] dp
+    ) {
+        if(n == 0 && target == 0) return 1;
+
+        if(dp[n][target] != -1) return dp[n][target];
+
+        int totalWays = 0;
+
+        for(int i = 1; i <= k; i++) {
+            if(target >= i && n > 0) {
+                totalWays = (
+                    totalWays +
+                    numRollsToTargetRecMemo(
+                        n - 1, k, target - i, dp
+                    )
+                ) % MOD;
+            }
+        }
+
+        return dp[n][target] = totalWays;
+    }
+
+    public int numRollsToTarget(int n, int k, int target) {
+        int[][] dp = new int[n + 1][target + 1];
+
+        for(int i = 0; i <= n; i++) {
+            Arrays.fill(dp[i], -1);
+        }
+
+        return numRollsToTargetRecMemo(n, k, target, dp);
+    }
+}
