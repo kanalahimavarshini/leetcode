@@ -3213,3 +3213,90 @@ class Solution {
     }
 
 }
+class Solution {
+    class Node {
+        int idx;
+        List<Character> list;
+
+        Node() {
+            this.idx = 0;
+            this.list = new ArrayList<>();
+        }
+    }
+
+    public void countingSort(List<Character> list) {
+        int[] freq = new int[26];
+        for (char ch : list) {
+            freq[ch - 'a']++;
+        }
+        int idx = 0;
+        for (int i = 0; i < 26; i++) {
+            while (freq[i] > 0) {
+                list.set(idx, (char) (i + 'a'));
+                idx++;
+                freq[i]--;
+            }
+        }
+    }
+
+    public int findParent(int x, int[] parent) {
+        if (x != parent[x]) {
+            parent[x] = findParent(parent[x], parent);
+        }
+        return parent[x];
+    }
+
+    public void union(int x, int y, int[] parent, int[] rank) {
+        int parent_x = findParent(x, parent);
+        int parent_y = findParent(y, parent);
+
+        if (parent_x != parent_y) {
+            if (rank[parent_x] > rank[parent_y]) {
+                parent[parent_y] = parent_x;
+                rank[parent_x] += rank[parent_y];
+            } else {
+                parent[parent_x] = parent_y;
+                rank[parent_y] += rank[parent_x];
+            }
+        }
+    }
+
+    public String smallestStringWithSwaps(String s, List<List<Integer>> pairs) {
+        int n = s.length();
+        int[] parent = new int[n];
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+        }
+
+        int[] rank = new int[n];
+        Arrays.fill(rank, 1);
+
+        for (List<Integer> pair : pairs) {
+            union(pair.get(0), pair.get(1), parent, rank);
+        }
+
+        HashMap<Integer, Node> parent_child = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            char ch = s.charAt(i);
+            int parentIdx = findParent(i, parent);
+            if (!parent_child.containsKey(parentIdx)) {
+                parent_child.put(parentIdx, new Node());
+            }
+            parent_child.get(parentIdx).list.add(ch);
+        }
+
+        for (Node node : parent_child.values()) {
+            countingSort(node.list);
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            Node node = parent_child.get(parent[i]);
+            if (node != null) {
+                sb.append(node.list.get(node.idx++));
+            }
+        }
+
+        return sb.toString();
+    }
+}
