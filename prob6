@@ -3666,3 +3666,44 @@ class Solution {
         }
     }
 }
+class NodeValue {
+    int sum, max, min;
+
+    public NodeValue(int _sum, int _max, int _min) {
+        sum = _sum;
+        max = _max;
+        min = _min;
+    }
+}
+
+class Solution {
+    private int maxSum = 0; // Tracks the highest valid BST sum found anywhere in the tree
+
+    public int maxSumBST(TreeNode root) {
+        postOrder(root);
+        return maxSum;
+    }
+
+    private NodeValue postOrder(TreeNode root) {
+        // Base case: _max = MIN_VALUE, _min = MAX_VALUE so leaf nodes always pass the check
+        if (root == null) {
+            return new NodeValue(0, Integer.MIN_VALUE, Integer.MAX_VALUE);
+        }
+
+        NodeValue left = postOrder(root.left);
+        NodeValue right = postOrder(root.right);
+
+        // Check if the current subtree forms a valid BST
+        if (left.max < root.val && root.val < right.min) {
+            int currSum = left.sum + right.sum + root.val;
+            maxSum = Math.max(maxSum, currSum); // Update global maximum
+
+            int currMax = Math.max(right.max, root.val);
+            int currMin = Math.min(left.min, root.val);
+            return new NodeValue(currSum, currMax, currMin);
+        }
+
+        // Invalid BST: pass _max = MAX_VALUE and _min = MIN_VALUE so all ancestors also fail
+        return new NodeValue(0, Integer.MAX_VALUE, Integer.MIN_VALUE);
+    }
+}
