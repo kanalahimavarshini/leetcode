@@ -3754,3 +3754,56 @@ class Solution {
         return dp[headID];
     }
 }
+class Solution {
+    private double result = 0.0;    
+    public double frogPosition(int n, int[][] edges, int t, int target) {
+        List<Integer>[] graph= new ArrayList[n+1];
+        for(int i=0;i<=n;i++){
+            graph[i] = new ArrayList<>();
+        }
+        for(int[] edge: edges){
+            graph[edge[0]].add(edge[1]);
+            graph[edge[1]].add(edge[0]);
+        }
+
+        boolean[] visited = new boolean[n+1];
+        dfs(1, graph, t, 0, target, 1.0, visited);
+        return result;
+    }
+
+    public void dfs(int node, List<Integer>[] graph, int t, int time, int target, double prob, boolean[] visited){
+        //1. if time > t
+        if(time > t) return;
+        
+        //2. visit the curr node
+        visited[node] = true;
+
+        //3. check the unVisited count
+        int unVisitedCount = 0;
+        for(int i: graph[node]){
+            if(!visited[i]){
+                unVisitedCount++;
+            }
+        }
+
+        //4. check if curr node is target
+        if(node == target){
+            if(time == t || unVisitedCount == 0){
+                result = prob;
+            }
+            return;
+        }
+
+        //5. check if unVisitedCount == 0 i.e no neighbor exists
+        if(unVisitedCount == 0){
+            return;
+        }
+
+        //6. now, explore the unVisited vertices
+        for(int i: graph[node]){
+            if(!visited[i]){
+                dfs(i, graph, t, time+1, target, prob / unVisitedCount, visited);
+            }
+        }
+    }
+}
