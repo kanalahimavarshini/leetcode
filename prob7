@@ -3359,3 +3359,17 @@ class Solution {
         return s.substring(0,dp[dp.length-1]);
     }
 }
+class Solution {
+    public int findLucky(int[] arr) {
+        // Intuition: count every value with a second loop
+        int r = -1;
+        for (int c : arr) {
+            int count = 0;
+            for (int x : arr) {
+                if (x == c) count++;
+            }
+            if (count == c) r = Math.max(r, c);
+        }
+        return r;
+    }
+}
