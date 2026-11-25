@@ -3256,3 +3256,84 @@ class Solution {
         return totalSum;
     }
 }
+class Solution {
+    class Node{
+        int r;
+        int c;
+        int street;
+        Node(int i,int j,int x){
+            r=i;
+            c=j;
+            street=x;
+        }
+    }
+
+    public boolean isSafe(int i,int j,int n,int m){
+        return i>=0 && j>=0 && i<n && j<m;
+    }
+
+    public boolean hasValidPath(int[][] grid) {
+        int n=grid.length;
+        int m=grid[0].length;
+
+        Map<Integer,char[]> streetMap=new HashMap<>();
+        streetMap.put(1,new char[]{'L','R'});
+        streetMap.put(2,new char[]{'T','D'});
+        streetMap.put(3,new char[]{'L','D'});
+        streetMap.put(4,new char[]{'D','R'});
+        streetMap.put(5,new char[]{'L','T'});
+        streetMap.put(6,new char[]{'T','R'});
+
+        Map<Character,int[]> dirMap=new HashMap<>();
+        dirMap.put('R',new int[]{0,1});
+        dirMap.put('D',new int[]{1,0});
+        dirMap.put('T',new int[]{-1,0});
+        dirMap.put('L',new int[]{0,-1});
+
+        Queue<Node> q=new LinkedList<>();
+        boolean vis[][] = new boolean[n][m];
+
+        q.offer(new Node(0,0,grid[0][0]));
+        vis[0][0]=true;
+
+        while(!q.isEmpty()){
+            Node node=q.poll();
+            int r=node.r;
+            int c=node.c;
+
+            if(r==n-1 && c==m-1) return true;
+
+            char[] dirs=streetMap.get(node.street);
+
+            for(int i=0;i<2;i++){
+                int[] pos=dirMap.get(dirs[i]);
+                int nr=r+pos[0];
+                int nc=c+pos[1];
+
+                if(isSafe(nr,nc,n,m) && !vis[nr][nc]){
+                    char[] newDirs=streetMap.get(grid[nr][nc]);
+
+                    char need;
+                    if(dirs[i]=='T') need='D';
+                    else if(dirs[i]=='D') need='T';
+                    else if(dirs[i]=='L') need='R';
+                    else need='L';
+
+                    boolean valid=false;
+                    for(char d:newDirs){
+                        if(d==need){
+                            valid=true;
+                            break;
+                        }
+                    }
+
+                    if(valid){
+                        q.offer(new Node(nr,nc,grid[nr][nc]));
+                        vis[nr][nc]=true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+}
