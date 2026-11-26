@@ -3668,3 +3668,23 @@ class Solution {
         return ans;
     }
 }
+class Solution {
+    public List<Integer> minSubsequence(int[] nums) {
+        Arrays.sort(nums);
+        for (int l = 0, r = nums.length - 1; l < r; l++, r--) {
+            int t = nums[l];
+            nums[l] = nums[r];
+            nums[r] = t;
+        }
+        List<Integer> ans = new ArrayList<>();
+        int sum1 = 0, sum2 = 0;
+        for (int i = 0; i < nums.length; i++) {
+            sum1 += nums[i];
+            for (int j = i + 1; j < nums.length; j++) sum2 += nums[j];
+            ans.add(nums[i]);
+            if (sum1 <= sum2) sum2 = 0;
+            else break;
+        }
+        return ans;
+    }
+}
