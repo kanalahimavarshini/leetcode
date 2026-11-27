@@ -3413,3 +3413,15 @@ int mod=1e9+7;
         return f(1,mask,n,hats);
     }
 };
+class Solution {
+    public String destCity(List<List<String>> paths) {
+        Map<String, Integer> x = new HashMap<>();
+        for (int i = 0; i < paths.size(); i++) {
+            x.merge(paths.get(i).get(0), 1, Integer::sum);
+        }
+        for (int i = 0; i < paths.size(); i++) {
+            if (x.getOrDefault(paths.get(i).get(1), 0) == 0) return paths.get(i).get(1);
+        }
+        return "";
+    }
+}
