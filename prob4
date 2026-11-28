@@ -3767,3 +3767,29 @@ class Solution {
         return cnt;
     }
 }
+class Solution {
+    public String arrangeWords(String text) {
+        // Convert the string into lower case
+        text = text.toLowerCase();
+
+        // Convert the whole string into String array of word where each element 
+        // is a string seperated by a space and the relative order is maintained
+        String[] word = text.split(" ");
+
+        // Sort the array based on size of string 
+        Arrays.sort(word , (a,b) -> a.length() - b.length());
+
+        // Create a StringBuilder and append each word along with the space
+        StringBuilder sb = new StringBuilder();
+        for(String s : word){
+            sb.append(s).append(" ");
+        }
+        // delete the last added space
+        sb.deleteCharAt(sb.length()-1);
+
+        // Set the first char to Upper Case
+        sb.setCharAt(0 , Character.toUpperCase(sb.charAt(0)));
+        // return final String
+        return sb.toString();
+    }
+}
