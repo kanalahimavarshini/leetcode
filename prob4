@@ -3538,3 +3538,27 @@ class Solution {
         return ans;
     }
 }
+class Solution {
+    public List<String> buildArray(int[] target, int n) {
+
+        List<String> rez = new ArrayList<>();
+        int counter = 0;
+
+        for (int i = 1; i <= n; i++) {
+
+            rez.add("Push");
+
+            if (i == target[counter]) {
+                counter++;
+            } else {
+                rez.add("Pop");
+            }
+
+            if (counter == target.length) {
+                break;
+            }
+        }
+
+        return rez;
+    }
+}
