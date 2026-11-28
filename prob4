@@ -3756,3 +3756,14 @@ class Solution {
         return dp[target][num] = max;
     }
 }
+class Solution {
+    public int busyStudent(int[] startTime, int[] endTime, int queryTime) {
+        int cnt = 0;
+        for (int i = 0; i < startTime.length; i++) {
+            if (queryTime >= startTime[i] && queryTime <= endTime[i]) {
+                cnt++;
+            }
+        }
+        return cnt;
+    }
+}
